@@ -12,7 +12,7 @@
     internal static class Program {
         private static int Main(string[] args) {
             int result = MainCore(args);
-            if (Debugger.IsAttached) Console.ReadKey();
+            if (Debugger.IsAttached && result != 0) Console.ReadKey();
             return result;
         }
 
