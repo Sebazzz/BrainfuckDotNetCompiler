@@ -1,5 +1,6 @@
 namespace BfCompiler {
     using System;
+    using System.Diagnostics;
     using CSharpSyntax;
 
     internal class SyntaxEmitter {
@@ -46,7 +47,9 @@ namespace BfCompiler {
                     break;
 
                 default:
-                    throw SyntaxError(codePoint);
+                    //throw SyntaxError(codePoint);
+                    Debug.WriteLine("Ignoring character: " + codePoint);
+                    break;
             }
 
             this._charsProcessed++;
