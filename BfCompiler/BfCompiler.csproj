@@ -127,10 +127,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BfCompilation.cs" />
     <Compile Include="BfCompilationException.cs" />
     <Compile Include="BfCompiler.cs" />
+    <Compile Include="BinaryEmitter.cs" />
+    <Compile Include="CompilationConstants.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StatementBlockManager.cs" />
+    <Compile Include="SyntaxEmitter.cs" />
+    <Compile Include="TextEmitter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

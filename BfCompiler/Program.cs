@@ -41,7 +41,7 @@
                 input = File.ReadAllText(arg.FileInput);
             }
             catch (Exception ex) {
-                Console.WriteLine("Unable to read '{0}': {1} (2:x2}", arg.FileInput, ex.Message, ex.HResult);
+                Console.WriteLine("Unable to read '{0}': {1} {2:x2}", arg.FileInput, ex.Message, ex.HResult);
                 return -4;
             }
 
@@ -53,7 +53,7 @@
             catch (BfCompilationException ex) {
                 Console.WriteLine("Compile error: ");
                 Console.WriteLine("\t{0}", ex.Message);
-                Console.WriteLine("Line: {0}; column: {1}", ex.Column, ex.Line);
+                Console.WriteLine("Line: {0}; column: {1}", ex.Line, ex.Column);
                 return -5;
             }
 
@@ -62,7 +62,7 @@
                 File.WriteAllBytes(outputPath, output);
             }
             catch (Exception ex) {
-                Console.WriteLine("Unable to write compilation result '{0}': {1} (2:x2}", outputPath, ex.Message, ex.HResult);
+                Console.WriteLine("Unable to write compilation result '{0}': {1} {2:x2}", outputPath, ex.Message, ex.HResult);
                 return -4;
             }
 
