@@ -247,7 +247,7 @@ namespace BfCompiler {
         }
 
         private BfCompilationException RethrowCompilationException(BfCompilationException ex) {
-            return new BfCompilationException(ex.Message, this._pointer, 1);
+            return new BfCompilationException(ex.Message, this._pointer, this._line);
         }
     }
 }
