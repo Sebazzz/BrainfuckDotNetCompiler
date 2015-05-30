@@ -162,6 +162,10 @@ namespace BfCompiler {
         }
 
         private static Exception SyntaxError(char codePoint) {
+            if (Char.IsControl(codePoint)) {
+                return new BfCompilationException("Unknown token (ch) '"+(int)codePoint + "'", 0, 0);
+            }
+
             return new BfCompilationException("Unknown token '"+codePoint+"'", 0, 0);
         }
 

@@ -1,19 +1,11 @@
 namespace BfCompiler {
     using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Text;
     using CSharpSyntax;
-    using CSharpSyntax.Printer;
-    using Microsoft.CodeAnalysis;
-    using Microsoft.CodeAnalysis.CSharp;
-    using Microsoft.CodeAnalysis.Emit;
-    using Syntax = CSharpSyntax.Syntax;
-    using SyntaxNode = CSharpSyntax.SyntaxNode;
 
     internal class BfCompilation {
         private readonly string _input;
         private int _pointer;
+        private int _line;
 
         private NamespaceDeclarationSyntax _ns;
         private ClassDeclarationSyntax _clazz;
@@ -34,6 +26,7 @@ namespace BfCompiler {
 
         public byte[] Compile() {
             this._pointer = -1;
+            this._line = 1;
 
             this._ns = Syntax.NamespaceDeclaration(CompilationConstants.Namespace);
 
@@ -232,6 +225,19 @@ namespace BfCompiler {
 
         private void GenerateCodeForCurrentCodePoint() {
             char codePoint = this.Current;
+
+            switch (codePoint) {
+                case '\r':
+                case '\n':
+                    this._line++;
+                    if (!this.Advance()) return;
+                    codePoint = this.Current;
+
+                    if ((codePoint == '\r' || codePoint == '\n') && !this.Advance()) return;
+                    codePoint = this.Current;
+
+                    break;
+            }
 
             try {
                 this._syntaxEmitter.GenerateCodeForCodePoint(codePoint);
