@@ -131,7 +131,7 @@ namespace BfCompiler {
         }
 
         private static MemberAccessExpressionSyntax CurrentCellValueMemberAccess() {
-            return Syntax.MemberAccessExpression(Syntax.MemberAccessExpression(Syntax.IdentifierName(CompilationConstants.CurrentCell), "Value"), "Value");
+            return Syntax.MemberAccessExpression(Syntax.IdentifierName(CompilationConstants.CurrentCell), "Value");
         }
 
         private void CurrentCellAssignmentOperation(InvocationExpressionSyntax valueExpression) {

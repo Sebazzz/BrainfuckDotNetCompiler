@@ -33,16 +33,6 @@ namespace BfCompiler {
             this._clazz = Syntax.ClassDeclaration(identifier: CompilationConstants.MainTypeName, modifiers: Modifiers.Static | Modifiers.Internal);
             this._ns.Members.Add(this._clazz);
 
-            var cell = Syntax.ClassDeclaration(identifier: CompilationConstants.CellTypeName, modifiers:Modifiers.Internal);
-            cell.Members.Add(
-                Syntax.FieldDeclaration(
-                    modifiers: Modifiers.Public,
-                    declaration: Syntax.VariableDeclaration(
-                        new PredefinedTypeSyntax() { Type = PredefinedType.Char }, 
-                        new[] {Syntax.VariableDeclarator("Value")})));
-
-            this._ns.Members.Add(cell);
-
             Func<TypeSyntax> listType = () => Syntax.ParseName("System.Collections.Generic.LinkedList<" + CompilationConstants.CellTypeName + ">");
             Func<TypeSyntax> nodeType = () => Syntax.ParseName("System.Collections.Generic.LinkedListNode<" + CompilationConstants.CellTypeName + ">");
 
@@ -180,7 +170,7 @@ namespace BfCompiler {
                                     Syntax.MemberAccessExpression(Syntax.IdentifierName("list"), call),
                                     Syntax.ArgumentList(
                                         Syntax.Argument(Syntax.IdentifierName("node")),
-                                        Syntax.Argument(Syntax.ObjectCreationExpression(cellType, initializer: Syntax.InitializerExpression()))
+                                        Syntax.Argument(Syntax.LiteralExpression(Char.MinValue))
                                         )
                                     )
                                 ),
