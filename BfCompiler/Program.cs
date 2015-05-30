@@ -7,6 +7,7 @@
     internal class Args {
         public string FileInput { get; set; }
         public string FileOutput { get; set; }
+        public bool Optimize { get; set; }
     }
 
     internal static class Program {
@@ -83,11 +84,14 @@
             parser.Setup(x => x.FileInput)
                 .As('i', "input")
                 .Required()
-                .WithDescription("File to compile");
+                .WithDescription("[Required] File to compile");
 
             parser.Setup(x => x.FileOutput)
                 .As('o', "output")
-                .WithDescription("Output compiled file");
+                .WithDescription("Output compiled file. If omitted the input file name will be used as the base executable name.");
+
+            parser.Setup(x => x.Optimize)
+                .As("optimize");
 
             // parse 
             var result = parser.Parse(args);
