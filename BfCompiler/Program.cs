@@ -2,12 +2,12 @@
     using System;
     using System.Diagnostics;
     using System.IO;
+    using Core;
     using Fclp;
 
-    internal class Args {
+    internal class Args : CompilerOptions {
         public string FileInput { get; set; }
         public string FileOutput { get; set; }
-        public bool Optimize { get; set; }
     }
 
     internal static class Program {
@@ -49,7 +49,7 @@
             // core compile
             byte[] output;
             try {
-                output = BfCompiler.Compile(input);
+                output = BfCompiler.Compile(input, arg);
             }
             catch (BfCompilationException ex) {
                 Console.WriteLine("Compile error: ");

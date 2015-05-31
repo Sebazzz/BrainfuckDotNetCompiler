@@ -7,73 +7,39 @@ namespace BfCompiler.Core.Visitor {
 
     partial class SyntaxNodeVisitor {
 
-		public void Visit(SyntaxNode node) {
+
 		
-			{
-				PointerOperationNode derived = node as PointerOperationNode;
-				if (derived != null) {
-					this.VisitPointerOperationNode(derived);
-					return;
-				}
-			}
+		public virtual SyntaxNodeVisitor BeginVisit(RootNode node) {return this;}
 
-			{
-				ValueOperationNode derived = node as ValueOperationNode;
-				if (derived != null) {
-					this.VisitValueOperationNode(derived);
-					return;
-				}
-			}
+		public virtual void EndVisit(RootNode node) {}
 
-			{
-				LoopNode derived = node as LoopNode;
-				if (derived != null) {
-					this.VisitLoopNode(derived);
-					return;
-				}
-			}
+		
+		
+		public virtual void Visit(TriviaNode node) {}
 
-			{
-				ReadOperation derived = node as ReadOperation;
-				if (derived != null) {
-					this.VisitReadOperation(derived);
-					return;
-				}
-			}
+		
+		
+		public virtual void Visit(PointerOperationNode node) {}
 
-			{
-				OutputOperation derived = node as OutputOperation;
-				if (derived != null) {
-					this.VisitOutputOperation(derived);
-					return;
-				}
-			}
+		
+		
+		public virtual void Visit(ValueOperationNode node) {}
 
-			{
-				RootNode derived = node as RootNode;
-				if (derived != null) {
-					this.VisitRootNode(derived);
-					return;
-				}
-			}
+		
+		
+		public virtual SyntaxNodeVisitor BeginVisit(LoopNode node) {return this;}
 
-			{
-				TriviaNode derived = node as TriviaNode;
-				if (derived != null) {
-					this.VisitTriviaNode(derived);
-					return;
-				}
-			}
-		}
+		public virtual void EndVisit(LoopNode node) {}
 
-		protected virtual void VisitPointerOperationNode(PointerOperationNode node) {}
-		protected virtual void VisitValueOperationNode(ValueOperationNode node) {}
-		protected virtual void VisitLoopNode(LoopNode node) {}
-		protected virtual void VisitReadOperation(ReadOperation node) {}
-		protected virtual void VisitOutputOperation(OutputOperation node) {}
-		protected virtual void VisitRootNode(RootNode node) {}
-		protected virtual void VisitTriviaNode(TriviaNode node) {}
+		
+		
+		public virtual void Visit(ReadOperation node) {}
 
+		
+		
+		public virtual void Visit(OutputOperation node) {}
+
+		
 	}
 }
 

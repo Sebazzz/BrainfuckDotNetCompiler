@@ -3,6 +3,7 @@
     using System.Text;
     using Visitor;
 
+    [CompositeNode]
     internal sealed class LoopNode : SyntaxNode {
         public ReadOnlyCollection<SyntaxNode> Nodes { get; }
 
@@ -11,9 +12,12 @@
         }
 
         public override void Accept(SyntaxNodeVisitor visitor) {
+            SyntaxNodeVisitor innerVisitor = visitor.BeginVisit(this) ?? visitor; 
             foreach (SyntaxNode node in this.Nodes) {
-                visitor.Visit(node);
+                node.Accept(innerVisitor);
             }
+            if (innerVisitor != visitor) innerVisitor.EndVisit(this);
+            visitor.EndVisit(this);
         }
 
         public override string ToString() {

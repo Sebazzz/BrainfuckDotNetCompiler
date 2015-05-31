@@ -1,5 +1,6 @@
 ﻿namespace BfCompiler.Core.Syntax {
     using System;
+    using Visitor;
 
     internal class ValueOperationNode : SyntaxNode {
         public Operation Operation { get; }
@@ -17,6 +18,10 @@
                 default:
                     return String.Empty;
             }
+        }
+
+        public override void Accept(SyntaxNodeVisitor visitor) {
+            visitor.Visit(this);
         }
     }
 }

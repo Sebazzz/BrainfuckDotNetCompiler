@@ -3,14 +3,14 @@
     using CSharpSyntax;
     using Syntax;
 
-    internal sealed class CSharpCodeGenerationVisitor : SyntaxNodeVisitor {
+    internal class CSharpCodeGenerationVisitor : SyntaxNodeVisitor {
         private readonly BlockSyntax _blockSyntax;
 
         public CSharpCodeGenerationVisitor(BlockSyntax blockSyntax) {
             this._blockSyntax = blockSyntax;
         }
 
-        protected override void VisitOutputOperation(OutputOperation node) {
+        public override void Visit(OutputOperation node) {
             this._blockSyntax.Statements.Add(
                 Syntax.ExpressionStatement(
                     Syntax.InvocationExpression(
@@ -23,7 +23,7 @@
             );
         }
 
-        protected override void VisitLoopNode(LoopNode node) {
+        public override SyntaxNodeVisitor BeginVisit(LoopNode node) {
             var @while = Syntax.WhileStatement(
                 Syntax.BinaryExpression(
                     BinaryOperator.ExclamationEquals,
@@ -36,10 +36,14 @@
 
             this._blockSyntax.Statements.Add(@while);
 
-            node.Accept(new CSharpCodeGenerationVisitor(block));
+            return this.CreateInnerVisitor(block);
         }
 
-        protected override void VisitPointerOperationNode(PointerOperationNode node) {
+        protected virtual SyntaxNodeVisitor CreateInnerVisitor(BlockSyntax block) {
+            return new CSharpCodeGenerationVisitor(block);
+        }
+
+        public override void Visit(PointerOperationNode node) {
             switch (node.Operation) {
                 case Operation.Increase:
                     this.CurrentCellAssignmentByPointerOperation(CompilationConstants.CellNextMethod);
@@ -78,7 +82,7 @@
                 );
         }
 
-        protected override void VisitReadOperation(ReadOperation node) {
+        public override void Visit(ReadOperation node) {
             this._blockSyntax.Statements.Add(
                 Syntax.ExpressionStatement(
                     Syntax.BinaryExpression(
@@ -103,11 +107,11 @@
             );
         }
 
-        private static MemberAccessExpressionSyntax CurrentCellValueMemberAccess() {
+        internal static MemberAccessExpressionSyntax CurrentCellValueMemberAccess() {
             return Syntax.MemberAccessExpression(Syntax.IdentifierName(CompilationConstants.CurrentCell), "Value");
         }
 
-        protected override void VisitValueOperationNode(ValueOperationNode node) {
+        public override void Visit(ValueOperationNode node) {
             switch (node.Operation) {
                 case Operation.Increase:
                     this.CellAssignmentOperation(PostfixUnaryOperator.PlusPlus);

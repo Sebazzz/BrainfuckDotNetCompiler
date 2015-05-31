@@ -42,21 +42,19 @@ namespace BfCompiler.Core.Visitor {
 
     partial class SyntaxNodeVisitor {
 
-		public void Visit(SyntaxNode node) {
-		<# foreach (var clazz in this._syntaxNodeClasses) { #>
-
-			{
-				<#=clazz.Name#> derived = node as <#=clazz.Name#>;
-				if (derived != null) {
-					this.Visit<#=clazz.Name#>(derived);
-					return;
-				}
-			}
-<#}#>
-		}
-
 <# foreach (var clazz in this._syntaxNodeClasses) { #>
-		protected virtual void Visit<#=clazz.Name#>(<#=clazz.Name#> node) {}
+
+		<# if (IsComposite(clazz)) { #>
+
+		public virtual SyntaxNodeVisitor BeginVisit(<#=clazz.Name#> node) {return this;}
+
+		public virtual void EndVisit(<#=clazz.Name#> node) {}
+
+		<# }  else { #>
+
+		public virtual void Visit(<#=clazz.Name#> node) {}
+
+		<# } #>
 <#}#>
 
 	}
@@ -76,6 +74,10 @@ namespace BfCompiler.Core.Visitor {
 		    this.ProcessRecursive(element);
 		}
     }
+
+	private bool IsComposite(CodeClass clazz) {
+		return clazz.Attributes.OfType<CodeAttribute>().Any(x => x.Name.Equals("CompositeNode"));
+	}
 
     private void ProcessRecursive(CodeElement codeElement) {
         // process class

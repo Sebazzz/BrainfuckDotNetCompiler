@@ -8,9 +8,7 @@
 
         public NodePosition Position { get; }
 
-        public virtual void Accept(SyntaxNodeVisitor visitor) {
-            visitor.Visit(this);
-        }
+        public abstract void Accept(SyntaxNodeVisitor visitor);
 
         public override abstract string ToString();
     }

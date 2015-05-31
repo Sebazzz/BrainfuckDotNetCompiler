@@ -1,18 +1,22 @@
 namespace BfCompiler {
     using System;
+    using Core;
     using Core.Syntax;
     using Core.Visitor;
+    using Core.Visitor.Optimizer;
     using CSharpSyntax;
 
     internal class BfCompilation {
         private readonly string _input;
+        private readonly CompilerOptions _compilerOptions;
 
         private NamespaceDeclarationSyntax _ns;
         private ClassDeclarationSyntax _clazz;
         private MethodDeclarationSyntax _mainMethod;
 
-        public BfCompilation(string input) {
+        public BfCompilation(string input, CompilerOptions compilerOptions) {
             this._input = input;
+            this._compilerOptions = compilerOptions;
         }
 
         public byte[] Compile() {
@@ -180,12 +184,19 @@ namespace BfCompiler {
             this.GenerateCode();
 
             string compilationUnit = TextEmitter.CompileCompilationUnit(this._ns);
-            return BinaryEmitter.Compile(compilationUnit);
+            return BinaryEmitter.Compile(compilationUnit, this._compilerOptions);
         }
 
         private void GenerateCode() {
             RootNode node = BfParser.Parse(this._input);
-            node.Accept(new CSharpCodeGenerationVisitor(this._mainMethod.Body));
+
+            SyntaxNodeVisitor visitor = this.GetVisitor();
+            node.Accept(visitor);
+        }
+
+        private SyntaxNodeVisitor GetVisitor() {
+            BlockSyntax body = this._mainMethod.Body;
+            return this._compilerOptions.Optimize ? new OptimizingVisitor(body) : new CSharpCodeGenerationVisitor(body);
         }
     }
 }

@@ -10,7 +10,7 @@ namespace BfCompiler {
                 printer.Visit(syntaxNode);
             }
 
-            string code =  sw.ToString();
+            string code = sw.ToString();
 
             return code;
         }

@@ -127,13 +127,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BfCompiler.cs" />
     <Compile Include="Core\BfCompilation.cs" />
     <Compile Include="Core\BfCompilationException.cs" />
-    <Compile Include="Core\BfCompiler.cs" />
     <Compile Include="Core\BinaryEmitter.cs" />
     <Compile Include="Core\CompilationConstants.cs" />
+    <Compile Include="Core\CompilerOptions.cs" />
     <Compile Include="Core\Syntax\BfParser.cs" />
     <Compile Include="Core\Syntax\BfParserException.cs" />
+    <Compile Include="Core\Syntax\CompositeNodeAttribute.cs" />
     <Compile Include="Core\Syntax\INodeParser.cs" />
     <Compile Include="Core\Syntax\LoopNode.cs" />
     <Compile Include="Core\Syntax\LoopOperationParser.cs" />
@@ -151,6 +153,7 @@
     <Compile Include="Core\Syntax\ValueOperationNode.cs" />
     <Compile Include="Core\Syntax\ValueOperationParser.cs" />
     <Compile Include="Core\Visitor\CSharpCodeGenerationVisitor.cs" />
+    <Compile Include="Core\Visitor\Optimizer\OptimizingVisitor.cs" />
     <Compile Include="Core\Visitor\SyntaxNodeVisitor.cs" />
     <Compile Include="Core\Visitor\SyntaxNodeVisitor.generated.cs">
       <AutoGen>True</AutoGen>

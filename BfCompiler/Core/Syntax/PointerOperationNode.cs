@@ -1,5 +1,6 @@
 namespace BfCompiler.Core.Syntax {
     using System;
+    using Visitor;
 
     internal class PointerOperationNode : SyntaxNode {
         public PointerOperationNode(NodePosition position, Operation operation) : base(position) {
@@ -17,6 +18,10 @@ namespace BfCompiler.Core.Syntax {
                 default:
                     return String.Empty;
             }
+        }
+
+        public override void Accept(SyntaxNodeVisitor visitor) {
+            visitor.Visit(this);
         }
     }
 }

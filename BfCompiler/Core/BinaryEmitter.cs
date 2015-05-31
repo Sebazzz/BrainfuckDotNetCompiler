@@ -3,13 +3,14 @@ namespace BfCompiler {
     using System.Collections.Generic;
     using System.IO;
     using System.Text;
+    using Core;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.Emit;
 
     internal class BinaryEmitter {
-        public static byte[] Compile(string compilationUnit) {
-            CSharpCompilation compilation = SetupCompilation(compilationUnit);
+        public static byte[] Compile(string compilationUnit, CompilerOptions compilerOptions) {
+            CSharpCompilation compilation = SetupCompilation(compilationUnit, compilerOptions);
 
             using (MemoryStream ms = new MemoryStream()) {
                 EmitResult result = compilation.Emit(
@@ -25,7 +26,7 @@ namespace BfCompiler {
             }
         }
 
-        private static CSharpCompilation SetupCompilation(string compilationUnit) {
+        private static CSharpCompilation SetupCompilation(string compilationUnit, CompilerOptions compilerOptions) {
             CSharpParseOptions parseOptions =
                 CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.CSharp3)
                     .WithDocumentationMode(DocumentationMode.None)
@@ -42,7 +43,7 @@ namespace BfCompiler {
             CSharpCompilationOptions compileOptions = new CSharpCompilationOptions(
                 OutputKind.ConsoleApplication,
                 mainTypeName: CompilationConstants.FullyQualifiedMainTypeName,
-                optimizationLevel: OptimizationLevel.Release);
+                optimizationLevel: compilerOptions.Optimize ? OptimizationLevel.Release : OptimizationLevel.Debug);
 
             CSharpCompilation compilation = CSharpCompilation.Create("BfCompilation", input, @ref, compileOptions);
             return compilation;
