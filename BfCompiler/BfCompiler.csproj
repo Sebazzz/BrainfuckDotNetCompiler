@@ -132,10 +132,33 @@
     <Compile Include="Core\BfCompiler.cs" />
     <Compile Include="Core\BinaryEmitter.cs" />
     <Compile Include="Core\CompilationConstants.cs" />
+    <Compile Include="Core\Syntax\BfParser.cs" />
+    <Compile Include="Core\Syntax\BfParserException.cs" />
+    <Compile Include="Core\Syntax\INodeParser.cs" />
+    <Compile Include="Core\Syntax\LoopNode.cs" />
+    <Compile Include="Core\Syntax\LoopOperationParser.cs" />
+    <Compile Include="Core\Syntax\NewlineParser.cs" />
+    <Compile Include="Core\Syntax\NodePosition.cs" />
+    <Compile Include="Core\Syntax\Operation.cs" />
+    <Compile Include="Core\Syntax\OutputOperation.cs" />
+    <Compile Include="Core\Syntax\PointerOperationNode.cs" />
+    <Compile Include="Core\Syntax\PointerOperationParser.cs" />
+    <Compile Include="Core\Syntax\ReadOperation.cs" />
+    <Compile Include="Core\Syntax\RootNode.cs" />
+    <Compile Include="Core\Syntax\SingleCharacterParser.cs" />
+    <Compile Include="Core\Syntax\SyntaxNode.cs" />
+    <Compile Include="Core\Syntax\TriviaNode.cs" />
+    <Compile Include="Core\Syntax\ValueOperationNode.cs" />
+    <Compile Include="Core\Syntax\ValueOperationParser.cs" />
+    <Compile Include="Core\Visitor\CSharpCodeGenerationVisitor.cs" />
+    <Compile Include="Core\Visitor\SyntaxNodeVisitor.cs" />
+    <Compile Include="Core\Visitor\SyntaxNodeVisitor.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SyntaxNodeVisitor.tt</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Core\StatementBlockManager.cs" />
-    <Compile Include="Core\SyntaxEmitter.cs" />
     <Compile Include="Core\TextEmitter.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -147,7 +170,13 @@
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.0.0-rc2\tools\analyzers\C#\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Syntax\" />
+    <Content Include="Core\Visitor\SyntaxNodeVisitor.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>SyntaxNodeVisitor.generated.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

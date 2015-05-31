@@ -1,33 +1,21 @@
 namespace BfCompiler {
     using System;
+    using Core.Syntax;
+    using Core.Visitor;
     using CSharpSyntax;
 
     internal class BfCompilation {
         private readonly string _input;
-        private int _pointer;
-        private int _line;
 
         private NamespaceDeclarationSyntax _ns;
         private ClassDeclarationSyntax _clazz;
         private MethodDeclarationSyntax _mainMethod;
-
-        private StatementBlockManager _blockManager;
-        private SyntaxEmitter _syntaxEmitter;
-
-        private char Current => this._input[this._pointer];
-
-        private bool Advance() {
-            return ++this._pointer < this._input.Length;
-        }
 
         public BfCompilation(string input) {
             this._input = input;
         }
 
         public byte[] Compile() {
-            this._pointer = -1;
-            this._line = 1;
-
             this._ns = Syntax.NamespaceDeclaration(CompilationConstants.Namespace);
 
             this._clazz = Syntax.ClassDeclaration(identifier: CompilationConstants.MainTypeName, modifiers: Modifiers.Static | Modifiers.Internal);
@@ -143,14 +131,11 @@ namespace BfCompiler {
             };
 
             this._clazz.Members.Add(this._mainMethod);
-            this._blockManager = new StatementBlockManager(this._mainMethod);
-            this._syntaxEmitter = new SyntaxEmitter(this._blockManager);
 
             return this.CoreCompile();
         }
 
         private static MethodDeclarationSyntax GenerateListAccessor(string name, string member, string call) {
-            IdentifierNameSyntax cellType = Syntax.IdentifierName(CompilationConstants.CellTypeName);
             Func<TypeSyntax> listType = () => Syntax.ParseName("System.Collections.Generic.LinkedList<" + CompilationConstants.CellTypeName + ">");
             Func<TypeSyntax> nodeType = () => Syntax.ParseName("System.Collections.Generic.LinkedListNode<" + CompilationConstants.CellTypeName + ">");
 
@@ -199,45 +184,8 @@ namespace BfCompiler {
         }
 
         private void GenerateCode() {
-            this._syntaxEmitter.Start();
-
-            while (this.Advance()) {
-                this.GenerateCodeForCurrentCodePoint();
-            }
-
-            try {
-                this._syntaxEmitter.Finish();
-            }
-            catch (BfCompilationException ex) {
-                throw this.RethrowCompilationException(ex);
-            }
-        }
-
-        private void GenerateCodeForCurrentCodePoint() {
-            char codePoint = this.Current;
-
-            switch (codePoint) {
-                case '\r':
-                case '\n':
-                    this._line++;
-                    if (!this.Advance()) return;
-                    codePoint = this.Current;
-
-                    if ((codePoint == '\r' || codePoint == '\n') && !this.Advance()) return;
-                    codePoint = this.Current;
-
-                    break;
-            }
-
-            try {
-                this._syntaxEmitter.GenerateCodeForCodePoint(codePoint);
-            } catch (BfCompilationException ex) {
-                throw this.RethrowCompilationException(ex);
-            }
-        }
-
-        private BfCompilationException RethrowCompilationException(BfCompilationException ex) {
-            return new BfCompilationException(ex.Message, this._pointer, this._line);
+            RootNode node = BfParser.Parse(this._input);
+            node.Accept(new CSharpCodeGenerationVisitor(this._mainMethod.Body));
         }
     }
 }
